@@ -1,4 +1,4 @@
-[![Pylint](https://github.com/steelcityamir/safe-content-ai/actions/workflows/pylint.yml/badge.svg)](https://github.com/steelcityamir/safe-content-ai/actions/workflows/pylint.yml)
+[![Python CI](https://github.com/steelcityamir/safe-content-ai/actions/workflows/pylint.yml/badge.svg)](https://github.com/steelcityamir/safe-content-ai/actions/workflows/ci.yml)
 
 # Safe Content AI
 A fast reliable API for detecting NSFW images.
