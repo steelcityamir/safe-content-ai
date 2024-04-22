@@ -75,8 +75,8 @@ This endpoint allows users to upload an image file, which is then processed to d
 - **Body**:
   ```json
   {
-    "filename": "string",
-    "isNsfw": "boolean",
+    "file_name": "string",
+    "is_nsfw": "boolean",
     "confidence_percentage": "number"
   }
 
