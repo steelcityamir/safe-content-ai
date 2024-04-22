@@ -5,7 +5,7 @@ import hashlib
 import logging
 from fastapi import FastAPI, File, UploadFile
 from fastapi.responses import JSONResponse
-from transformers import pipeline
+from transformers import pipeline, PipelineException
 from PIL import Image
 from cachetools import Cache
 
@@ -60,7 +60,7 @@ async def classify_image(file: UploadFile = File(...)):
 
         return JSONResponse(status_code=200, content=response_data)
 
-    except Exception as e:
+    except PipelineException as e:
         return JSONResponse(status_code=500, content={"message": str(e)})
 
 if __name__ == "__main__":
