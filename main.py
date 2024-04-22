@@ -44,8 +44,8 @@ async def classify_image(file: UploadFile = File(...)):
 
         # Prepare the custom response data
         response_data = {
-            "filename": file.filename,
-            "isNsfw": best_prediction['label'] == 'nsfw',
+            "file_name": file.filename,
+            "is_nsfw": best_prediction['label'] == 'nsfw',
             "confidence_percentage": confidence_percentage
         }
 
