@@ -7,14 +7,13 @@ A fast reliable API for detecting NSFW images.
 - Caches predictions based on SHA-256 hash of image data
 
 
-
-## Getting Started
-
-### Run via Docker
+## Quick Start using Docker
 
 ```bash
 docker run -p 8000:8000 codebyamir/safecontentai:latest
 ```
+
+## Getting Started
 
 ### Prerequisites
 
