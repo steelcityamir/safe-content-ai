@@ -10,6 +10,12 @@ A fast reliable API for detecting NSFW images.
 
 ## Getting Started
 
+### Run via Docker
+
+```bash
+docker run -p 8000:8000 codebyamir/safecontentai:latest
+```
+
 ### Prerequisites
 
 Ensure you have Python 3.7+ installed on your system.
