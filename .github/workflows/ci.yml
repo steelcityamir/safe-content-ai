@@ -31,8 +31,8 @@ jobs:
     - name: Analysing the code with pylint
       run: |
         pylint $(git ls-files '*.py')
-    - name: Run tests with pytest
-      run: pytest
+    - name: Run tests and collect coverage
+      run: pytest --cov 
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v4.0.1
       with:
