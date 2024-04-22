@@ -5,7 +5,8 @@ import hashlib
 import logging
 from fastapi import FastAPI, File, UploadFile
 from fastapi.responses import JSONResponse
-from transformers import pipeline, PipelineException
+from transformers import pipeline
+from transformers.pipelines import PipelineException
 from PIL import Image
 from cachetools import Cache
 
