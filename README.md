@@ -1,4 +1,4 @@
-[![Python CI](https://github.com/steelcityamir/safe-content-ai/actions/workflows/ci.yml/badge.svg)](https://github.com/steelcityamir/safe-content-ai/actions/workflows/ci.yml)
+[![Python CI](https://github.com/steelcityamir/safe-content-ai/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/steelcityamir/safe-content-ai/actions/workflows/ci.yml)
 
 # Safe Content AI
 A fast reliable API for detecting NSFW images.
