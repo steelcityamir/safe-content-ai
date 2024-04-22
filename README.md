@@ -52,6 +52,36 @@ uvicorn main:app --reload
 
 ## API usage
 
+### POST /api/v1/detect
+
+This endpoint allows users to upload an image file, which is then processed to determine if the content is NSFW (Not Safe For Work). The response includes whether the image is considered NSFW and the confidence level of the prediction.
+
+#### Request
+
+- **URL**: `/api/v1/detect`
+- **Method**: `POST`
+- **Content-Type**: `multipart/form-data`
+- **Body**:
+  - **file** (required): The image file to be classified.
+
+#### Response
+
+- **Content-Type**: `application/json`
+- **Body**:
+  ```json
+  {
+    "filename": "string",
+    "isNsfw": "boolean",
+    "confidence_percentage": "number"
+  }
+
+#### Curl
+
+```bash
+curl -X POST "http://127.0.0.1:8000/api/v1/detect" \
+     -H "Content-Type: multipart/form-data" \
+     -F "file=@/path/to/your/image.jpeg"
+```
 
 
 
