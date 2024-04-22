@@ -1,13 +1,13 @@
 # Safe Content AI
 A fast reliable API for detecting NSFW images.
 
-## Features
+## 🌟 Features
 
 - Uses the [Falconsai/nsfw-image-detection](https://huggingface.co/Falconsai/nsfw_image_detection) AI model
 - Caches predictions based on SHA-256 hash of image data
 
 
-## Quick Start using Docker
+## 🐳 Quick Start using Docker
 
 ```bash
 docker run -p 8000:8000 codebyamir/safecontentai:latest
