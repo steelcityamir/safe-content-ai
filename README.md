@@ -15,6 +15,14 @@ A fast reliable API for detecting NSFW images.
 docker run -p 8000:8000 codebyamir/safe-content-ai:latest
 ```
 
+Test using curl
+
+```bash
+curl -X POST "http://127.0.0.1:8000/api/v1/detect" \
+     -H "Content-Type: multipart/form-data" \
+     -F "file=@/path/to/your/image.jpeg"
+```
+
 ## Getting Started
 
 ### Prerequisites
