@@ -10,10 +10,11 @@ FILE_NAME = "sunflower.jpg"
 
 def test_read_main():
     """Tests that POST /api/v1/detect returns 200 OK with valid request body"""
-    response = client.post(
-        "/api/v1/detect",
-        files={"file": (FILE_NAME, open(FILE_NAME, "rb"), "image/jpeg")},
-    )
+    with open(FILE_NAME, "rb") as file:
+        response = client.post(
+            "/api/v1/detect",
+            files={"file": (FILE_NAME, file, "image/jpeg")},
+        )
     assert response.status_code == 200
     assert response.json() == {
         "file_name": FILE_NAME,
