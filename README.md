@@ -12,7 +12,7 @@ A fast reliable API for detecting NSFW images.
 ## 🐳 Quick Start using Docker
 
 ```bash
-docker run -p 8000:8000 codebyamir/safe-content-ai:latest
+docker run -p 8000:8000 steelcityamir/safe-content-ai:latest
 ```
 
 Test using curl
