@@ -3,7 +3,8 @@
 import io
 import hashlib
 import logging
-from fastapi import FastAPI, File, UploadFile
+import aiohttp
+from fastapi import FastAPI, File, UploadFile, HTTPException
 from fastapi.responses import JSONResponse
 from transformers import pipeline
 from transformers.pipelines import PipelineException
@@ -23,23 +24,46 @@ cache = Cache(maxsize=1000)
 model = pipeline("image-classification", model="falconsai/nsfw_image_detection")
 
 
+async def download_image(image_url: str) -> bytes:
+    """Download an image from a URL."""
+    async with aiohttp.ClientSession() as session:
+        async with session.get(image_url) as response:
+            if response.status != 200:
+                raise HTTPException(
+                    status_code=response.status, detail="Image could not be retrieved."
+                )
+            return await response.read()
+
+
 def hash_data(data):
     """Function for hashing image data."""
     return hashlib.sha256(data).hexdigest()
 
 
 @app.post("/api/v1/detect")
-async def classify_image(file: UploadFile = File(...)):
+async def classify_image(file: UploadFile = File(None), image_url: str = None):
     """Function analyzing image."""
+    if file is None and image_url is None:
+        raise HTTPException(
+            status_code=400,
+            detail="Either an image file or image URL must be provided.",
+        )
+
     try:
-        logging.info("Processing %s", file.filename)
-        # Read the image file
-        image_data = await file.read()
+        if file:
+            logging.info("Processing %s", file.filename)
+            image_data = await file.read()
+            image_name = file.filename
+        elif image_url:
+            logging.info("Downloading image from URL")
+            image_data = await download_image(image_url)
+            image_name = image_url
+
         image_hash = hash_data(image_data)
 
         if image_hash in cache:
             # Return cached entry
-            logging.info("Returning cached entry for %s", file.filename)
+            logging.info("Returning cached entry for %s", image_name)
             return JSONResponse(status_code=200, content=cache[image_hash])
 
         image = Image.open(io.BytesIO(image_data))
@@ -55,7 +79,7 @@ async def classify_image(file: UploadFile = File(...)):
 
         # Prepare the custom response data
         response_data = {
-            "file_name": file.filename,
+            "source": image_name,
             "is_nsfw": best_prediction["label"] == "nsfw",
             "confidence_percentage": confidence_percentage,
         }
@@ -66,7 +90,11 @@ async def classify_image(file: UploadFile = File(...)):
         return JSONResponse(status_code=200, content=response_data)
 
     except PipelineException as e:
-        return JSONResponse(status_code=500, content={"message": str(e)})
+        logging.error("Error processing image: %s", str(e))
+        return JSONResponse(
+            status_code=500,
+            content={"message": "Error processing image", "error": str(e)},
+        )
 
 
 if __name__ == "__main__":
