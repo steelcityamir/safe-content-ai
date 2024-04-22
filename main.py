@@ -1,9 +1,13 @@
+"""Module providing an API for NSFW image detection."""
+
+import io
+import hashlib
+import logging
 from fastapi import FastAPI, File, UploadFile
 from fastapi.responses import JSONResponse
 from transformers import pipeline
 from PIL import Image
 from cachetools import Cache
-import io, hashlib, logging
 
 app = FastAPI()
 
@@ -16,19 +20,21 @@ cache = Cache(maxsize=1000)
 model = pipeline("image-classification", model="falconsai/nsfw_image_detection")
 
 def hash_data(data):
+    """Function for hashing image data."""
     return hashlib.sha256(data).hexdigest()
 
 @app.post("/api/v1/detect")
 async def classify_image(file: UploadFile = File(...)):
+    """Function analyzing image."""
     try:
-        logging.info(f"Processing {file.filename}")
+        logging.info("Processing %s", file.filename)
         # Read the image file
         image_data = await file.read()
         image_hash = hash_data(image_data)
 
         if image_hash in cache:
             # Return cached entry
-            logging.info(f"Returning cached entry for {file.filename}")
+            logging.info("Returning cached entry for %s", file.filename)
             return JSONResponse(status_code=200, content=cache[image_hash])
 
         image = Image.open(io.BytesIO(image_data))
