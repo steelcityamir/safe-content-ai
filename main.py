@@ -12,17 +12,21 @@ from cachetools import Cache
 
 app = FastAPI()
 
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+)
 
 # Initialize Cache with no TTL
-cache = Cache(maxsize=1000) 
+cache = Cache(maxsize=1000)
 
 # Load the model using the transformers pipeline
 model = pipeline("image-classification", model="falconsai/nsfw_image_detection")
 
+
 def hash_data(data):
     """Function for hashing image data."""
     return hashlib.sha256(data).hexdigest()
+
 
 @app.post("/api/v1/detect")
 async def classify_image(file: UploadFile = File(...)):
@@ -44,16 +48,16 @@ async def classify_image(file: UploadFile = File(...)):
         results = model(image)
 
         # Find the prediction with the highest confidence using the max() function
-        best_prediction = max(results, key=lambda x: x['score'])
+        best_prediction = max(results, key=lambda x: x["score"])
 
         # Calculate the confidence score, rounded to the nearest tenth and as a percentage
-        confidence_percentage = round(best_prediction['score'] * 100, 1)
+        confidence_percentage = round(best_prediction["score"] * 100, 1)
 
         # Prepare the custom response data
         response_data = {
             "file_name": file.filename,
-            "is_nsfw": best_prediction['label'] == 'nsfw',
-            "confidence_percentage": confidence_percentage
+            "is_nsfw": best_prediction["label"] == "nsfw",
+            "confidence_percentage": confidence_percentage,
         }
 
         # Populate hash
@@ -64,6 +68,8 @@ async def classify_image(file: UploadFile = File(...)):
     except PipelineException as e:
         return JSONResponse(status_code=500, content={"message": str(e)})
 
+
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run(app, host="127.0.0.1", port=8000)
