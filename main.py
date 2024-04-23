@@ -37,7 +37,7 @@ def hash_data(data):
     return hashlib.sha256(data).hexdigest()
 
 
-@app.post("/api/v1/detect")
+@app.post("/v1/detect")
 async def classify_image(file: UploadFile = File(...)):
     """Function analyzing image."""
     try:

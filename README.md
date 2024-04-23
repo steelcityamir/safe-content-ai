@@ -27,7 +27,7 @@ docker run -p 8000:8000 steelcityamir/safe-content-ai:latest
 Test using curl
 
 ```bash
-curl -X POST "http://127.0.0.1:8000/api/v1/detect" \
+curl -X POST "http://127.0.0.1:8000/v1/detect" \
      -H "Content-Type: multipart/form-data" \
      -F "file=@/path/to/your/image.jpeg"
 ```
@@ -76,13 +76,13 @@ uvicorn main:app --reload
 
 ## API usage
 
-### POST /api/v1/detect
+### POST /v1/detect
 
 This endpoint allows users to upload an image file, which is then processed to determine if the content is NSFW (Not Safe For Work). The response includes whether the image is considered NSFW and the confidence level of the prediction.
 
 #### Request
 
-- **URL**: `/api/v1/detect`
+- **URL**: `/v1/detect`
 - **Method**: `POST`
 - **Content-Type**: `multipart/form-data`
 - **Body**:
@@ -102,7 +102,7 @@ This endpoint allows users to upload an image file, which is then processed to d
 #### Curl
 
 ```bash
-curl -X POST "http://127.0.0.1:8000/api/v1/detect" \
+curl -X POST "http://127.0.0.1:8000/v1/detect" \
      -H "Content-Type: multipart/form-data" \
      -F "file=@/path/to/your/image.jpeg"
 ```
