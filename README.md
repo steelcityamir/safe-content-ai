@@ -6,7 +6,7 @@
 
 
 # Safe Content AI
-A fast reliable API for detecting NSFW images.
+A fast reliable API for detecting NSFW images.  Ideal for content moderation on digital platforms.
 
 
 ## ⭐ Features
