@@ -1,7 +1,13 @@
+<p align="center">
+     <img src="https://github.com/steelcityamir/safe-content-ai/assets/54147931/95f56427-dd91-42f7-8d70-d0bed795e14b" alt="logo">
+</p>
+
 [![Python CI](https://github.com/steelcityamir/safe-content-ai/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/steelcityamir/safe-content-ai/actions/workflows/ci.yml) [![codecov](https://codecov.io/gh/steelcityamir/safe-content-ai/graph/badge.svg?token=RRZEJFKRG1)](https://codecov.io/gh/steelcityamir/safe-content-ai)
+
 
 # Safe Content AI
 A fast reliable API for detecting NSFW images.
+
 
 ## ⭐ Features
 
