@@ -6,8 +6,11 @@
 
 
 # Safe Content AI
-A fast reliable API for detecting NSFW images.  Ideal for content moderation on digital platforms.
+A fast accurate API for detecting NSFW images.  Ideal for content moderation on digital platforms.
 
+This project uses Python, FastAPI framework, Transformers library, and TensorFlow.  
+
+TensorFlow will automatically detect and use the GPU if the underlying hardware supports it. 
 
 ## ⭐ Features
 
