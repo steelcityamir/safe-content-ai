@@ -72,7 +72,7 @@ Start the API server from your command line:
 ```bash
 uvicorn main:app --reload
 ```
-
+The API server runs on port 8000.
 
 ## API usage
 
