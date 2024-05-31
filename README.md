@@ -1,7 +1,16 @@
+<p align="center">
+     <img src="https://github.com/steelcityamir/safe-content-ai/assets/54147931/95f56427-dd91-42f7-8d70-d0bed795e14b" alt="logo">
+</p>
+
 [![Python CI](https://github.com/steelcityamir/safe-content-ai/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/steelcityamir/safe-content-ai/actions/workflows/ci.yml) [![codecov](https://codecov.io/gh/steelcityamir/safe-content-ai/graph/badge.svg?token=RRZEJFKRG1)](https://codecov.io/gh/steelcityamir/safe-content-ai)
 
+
 # Safe Content AI
-A fast reliable API for detecting NSFW images.
+A fast accurate API for detecting NSFW images.  Ideal for content moderation on digital platforms.
+
+This project uses Python, FastAPI framework, Transformers library, and TensorFlow.  
+
+TensorFlow will automatically detect and use the GPU if the underlying hardware supports it. 
 
 ## ⭐ Features
 
@@ -12,13 +21,13 @@ A fast reliable API for detecting NSFW images.
 ## 🐳 Quick Start using Docker
 
 ```bash
-docker run -p 8000:8000 codebyamir/safe-content-ai:latest
+docker run -p 8000:8000 steelcityamir/safe-content-ai:latest
 ```
 
 Test using curl
 
 ```bash
-curl -X POST "http://127.0.0.1:8000/api/v1/detect" \
+curl -X POST "http://127.0.0.1:8000/v1/detect" \
      -H "Content-Type: multipart/form-data" \
      -F "file=@/path/to/your/image.jpeg"
 ```
@@ -63,17 +72,17 @@ Start the API server from your command line:
 ```bash
 uvicorn main:app --reload
 ```
-
+The API server runs on port 8000.
 
 ## API usage
 
-### POST /api/v1/detect
+### POST /v1/detect
 
 This endpoint allows users to upload an image file, which is then processed to determine if the content is NSFW (Not Safe For Work). The response includes whether the image is considered NSFW and the confidence level of the prediction.
 
 #### Request
 
-- **URL**: `/api/v1/detect`
+- **URL**: `/v1/detect`
 - **Method**: `POST`
 - **Content-Type**: `multipart/form-data`
 - **Body**:
@@ -94,7 +103,7 @@ This endpoint allows users to upload an image file, which is then processed to d
 #### Curl
 
 ```bash
-curl -X POST "http://127.0.0.1:8000/api/v1/detect" \
+curl -X POST "http://127.0.0.1:8000/v1/detect" \
      -H "Content-Type: multipart/form-data" \
      -F "file=@/path/to/your/image.jpeg"
 ```

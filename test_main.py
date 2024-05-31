@@ -21,10 +21,10 @@ def compute_file_hash(file_path):
 
 
 def test_read_main():
-    """Tests that POST /api/v1/detect returns 200 OK with valid request body"""
+    """Tests that POST /v1/detect returns 200 OK with valid request body"""
     with open(FILE_NAME, "rb") as file:
         response = client.post(
-            "/api/v1/detect",
+            "/v1/detect",
             files={"file": (FILE_NAME, file, "image/jpeg")},
         )
     assert response.status_code == 200
@@ -57,7 +57,7 @@ def test_cache_hit():
         # Post the file to the endpoint as would happen in actual use
         with open(FILE_NAME, "rb") as file:
             response = client.post(
-                "/api/v1/detect",
+                "/v1/detect",
                 files={"file": (FILE_NAME, file, "image/jpeg")},
             )
 
