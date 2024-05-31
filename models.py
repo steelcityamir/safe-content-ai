@@ -1,4 +1,4 @@
-# models.py
+"""Module providing base models."""
 
 from pydantic import BaseModel
 
