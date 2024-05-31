@@ -36,16 +36,20 @@ def test_read_main():
 
 
 def test_invalid_input():
-    """Tests that POST /v1/detect returns 422 with empty request body"""
+    """Tests that POST /v1/detect returns 400 with empty request body"""
     response = client.post("/v1/detect", files={})
-    assert response.status_code == 422
+    assert response.status_code == 400
 
 
 def test_cache_hit():
     """Tests that the endpoint returns a cached response when an image hash matches"""
     # Compute the hash of the test file
     image_hash = compute_file_hash(FILE_NAME)
-    cached_response = {"message": "Cached data"}
+    cached_response = {
+        "file_name": FILE_NAME,
+        "is_nsfw": False,
+        "confidence_percentage": 100.0,
+    }
 
     with patch.dict(cache, {image_hash: cached_response}), patch(
         "main.logging.info"
@@ -63,3 +67,17 @@ def test_cache_hit():
 
         # Ensure logging was called correctly
         mock_logging.assert_called_with("Returning cached entry for %s", FILE_NAME)
+
+def test_detect_urls():
+    """Tests that POST /v1/detect/urls returns 200 OK with valid request body"""
+    urls = [
+        "https://raw.githubusercontent.com/steelcityamir/safe-content-ai/main/sunflower.jpg",
+    ]
+    response = client.post("/v1/detect/urls", json={"urls": urls})
+    assert response.status_code == 200
+    assert len(response.json()) == len(urls)
+    assert response.json()[0] == {
+        "url": urls[0],
+        "is_nsfw": False,
+        "confidence_percentage": 100.0,
+    }
