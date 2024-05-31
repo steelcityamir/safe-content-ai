@@ -7,3 +7,4 @@ python-multipart==0.0.9
 tensorflow==2.16.1
 tf-keras==2.16.0
 cachetools===5.3.3
+pydantic===2.7.2
