@@ -5,7 +5,7 @@ from pydantic import BaseModel
 
 class ImageUrlsRequest(BaseModel):
     """
-    Model representing the request body for the /api/v1/detect/urls endpoint.
+    Model representing the request body for the /v1/detect/urls endpoint.
 
     Attributes:
         urls (list[str]): List of image URLs to be processed.
