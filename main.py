@@ -10,6 +10,12 @@ from transformers import pipeline
 from transformers.pipelines import PipelineException
 from PIL import Image
 from cachetools import Cache
+from models import (
+    FileImageDetectionResponse,
+    UrlImageDetectionResponse,
+    ImageUrlsRequest,
+)
+
 
 app = FastAPI()
 
@@ -40,31 +46,30 @@ def hash_data(data):
     return hashlib.sha256(data).hexdigest()
 
 
-@app.post("/api/v1/detect")
-async def classify_image(file: UploadFile = File(None), image_url: str = None):
+@app.post("/api/v1/detect", response_model=FileImageDetectionResponse)
+async def classify_image(file: UploadFile = File(None)):
     """Function analyzing image."""
-    if file is None and image_url is None:
+    if file is None:
         raise HTTPException(
             status_code=400,
-            detail="Either an image file or image URL must be provided.",
+            detail="An image file must be provided.",
         )
 
     try:
-        if file:
-            logging.info("Processing %s", file.filename)
-            image_data = await file.read()
-            image_name = file.filename
-        elif image_url:
-            logging.info("Downloading image from URL")
-            image_data = await download_image(image_url)
-            image_name = image_url
+        logging.info("Processing %s", file.filename)
 
+        # Read the image file
+        image_data = await file.read()
         image_hash = hash_data(image_data)
 
         if image_hash in cache:
             # Return cached entry
-            logging.info("Returning cached entry for %s", image_name)
-            return JSONResponse(status_code=200, content=cache[image_hash])
+            logging.info("Returning cached entry for %s", file.filename)
+
+            cached_response = cache[image_hash]
+            response_data = {**cached_response, "file_name": file.filename}
+
+            return FileImageDetectionResponse(**response_data)
 
         image = Image.open(io.BytesIO(image_data))
 
@@ -79,22 +84,77 @@ async def classify_image(file: UploadFile = File(None), image_url: str = None):
 
         # Prepare the custom response data
         response_data = {
-            "source": image_name,
             "is_nsfw": best_prediction["label"] == "nsfw",
             "confidence_percentage": confidence_percentage,
         }
 
         # Populate hash
-        cache[image_hash] = response_data
+        cache[image_hash] = response_data.copy()
 
-        return JSONResponse(status_code=200, content=response_data)
+        # Add file_name to the API response
+        response_data["file_name"] = file.filename
+
+        return FileImageDetectionResponse(**response_data)
 
     except PipelineException as e:
         logging.error("Error processing image: %s", str(e))
-        return JSONResponse(
-            status_code=500,
-            content={"message": "Error processing image", "error": str(e)},
-        )
+        raise HTTPException(status_code=500, detail=f"Error processing image: {str(e)}")
+
+
+@app.post("/api/v1/detect/urls", response_model=list[UrlImageDetectionResponse])
+async def classify_images(request: ImageUrlsRequest):
+    """Function analyzing images from URLs."""
+    response_data = []
+
+    for image_url in request.urls:
+        try:
+            logging.info("Downloading image from URL: %s", image_url)
+            image_data = await download_image(image_url)
+            image_hash = hash_data(image_data)
+
+            if image_hash in cache:
+                # Return cached entry
+                logging.info("Returning cached entry for %s", image_url)
+
+                cached_response = cache[image_hash]
+                response = {**cached_response, "url": image_url}
+
+                response_data.append(response)
+                continue
+
+            image = Image.open(io.BytesIO(image_data))
+
+            # Use the model to classify the image
+            results = model(image)
+
+            # Find the prediction with the highest confidence using the max() function
+            best_prediction = max(results, key=lambda x: x["score"])
+
+            # Calculate the confidence score, rounded to the nearest tenth and as a percentage
+            confidence_percentage = round(best_prediction["score"] * 100, 1)
+
+            # Prepare the custom response data
+            detection_result = {
+                "is_nsfw": best_prediction["label"] == "nsfw",
+                "confidence_percentage": confidence_percentage,
+            }
+
+            # Populate hash
+            cache[image_hash] = detection_result.copy()
+
+            # Add url to the API response
+            detection_result["url"] = image_url
+
+            response_data.append(detection_result)
+
+        except PipelineException as e:
+            logging.error("Error processing image from %s: %s", image_url, str(e))
+            raise HTTPException(
+                status_code=500,
+                detail=f"Error processing image from {image_url}: {str(e)}",
+            )
+
+    return JSONResponse(status_code=200, content=response_data)
 
 
 if __name__ == "__main__":
