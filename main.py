@@ -54,7 +54,7 @@ def hash_data(data):
     return hashlib.sha256(data).hexdigest()
 
 
-@app.post("/api/v1/detect", response_model=FileImageDetectionResponse)
+@app.post("/v1/detect", response_model=FileImageDetectionResponse)
 async def classify_image(file: UploadFile = File(None)):
     """Function analyzing image."""
     if file is None:
@@ -109,7 +109,7 @@ async def classify_image(file: UploadFile = File(None)):
         raise HTTPException(status_code=500, detail=f"Error processing image: {str(e)}")
 
 
-@app.post("/api/v1/detect/urls", response_model=list[UrlImageDetectionResponse])
+@app.post("/v1/detect/urls", response_model=list[UrlImageDetectionResponse])
 async def classify_images(request: ImageUrlsRequest):
     """Function analyzing images from URLs."""
     response_data = []
