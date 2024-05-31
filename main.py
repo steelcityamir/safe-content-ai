@@ -10,12 +10,12 @@ from transformers import pipeline
 from transformers.pipelines import PipelineException
 from PIL import Image
 from cachetools import Cache
+import tensorflow as tf
 from models import (
     FileImageDetectionResponse,
     UrlImageDetectionResponse,
     ImageUrlsRequest,
 )
-import tensorflow as tf
 
 
 app = FastAPI()
