@@ -36,8 +36,8 @@ def test_read_main():
 
 
 def test_invalid_input():
-    """Tests that POST /api/v1/detect returns 400 with empty request body"""
-    response = client.post("/api/v1/detect", files={})
+    """Tests that POST /v1/detect returns 400 with empty request body"""
+    response = client.post("/v1/detect", files={})
     assert response.status_code == 400
 
 
@@ -69,11 +69,11 @@ def test_cache_hit():
         mock_logging.assert_called_with("Returning cached entry for %s", FILE_NAME)
 
 def test_detect_urls():
-    """Tests that POST /api/v1/detect/urls returns 200 OK with valid request body"""
+    """Tests that POST /v1/detect/urls returns 200 OK with valid request body"""
     urls = [
         "https://raw.githubusercontent.com/steelcityamir/safe-content-ai/main/sunflower.jpg",
     ]
-    response = client.post("/api/v1/detect/urls", json={"urls": urls})
+    response = client.post("/v1/detect/urls", json={"urls": urls})
     assert response.status_code == 200
     assert len(response.json()) == len(urls)
     assert response.json()[0] == {
