@@ -107,13 +107,13 @@ curl -X POST "http://127.0.0.1:8000/v1/detect" \
      -H "Content-Type: multipart/form-data" \
      -F "file=@/path/to/your/image.jpeg"
 ```
-### POST /api/v1/detect/urls
+### POST /v1/detect/urls
 
 This endpoint allows users to provide image URLs, which are then processed to determine if the content is NSFW (Not Safe For Work). The response includes whether each image is considered NSFW and the confidence level of the prediction.
 
 #### Request
 
-- **URL**: `/api/v1/detect/urls`
+- **URL**: `/v1/detect/urls`
 - **Method**: `POST`
 - **Content-Type**: `application/json`
 - **Body**:
@@ -146,7 +146,7 @@ This endpoint allows users to provide image URLs, which are then processed to de
 #### Curl
 
 ```bash
-curl -X POST "http://127.0.0.1:8000/api/v1/detect/urls" \
+curl -X POST "http://127.0.0.1:8000/v1/detect/urls" \
      -H "Content-Type: application/json" \
      -d '{
            "urls": [
