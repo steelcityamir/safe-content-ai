@@ -31,12 +31,13 @@ cache = Cache(maxsize=1000)
 model = pipeline("image-classification", model="falconsai/nsfw_image_detection")
 
 # Detect the device used by TensorFlow
-DEVICE = "GPU" if tf.config.list_physical_devices('GPU') else "CPU"
+DEVICE = "GPU" if tf.config.list_physical_devices("GPU") else "CPU"
 logging.info("TensorFlow version: %s", tf.__version__)
 logging.info("Model is using: %s", DEVICE)
 
 if DEVICE == "GPU":
     logging.info("GPUs available: %d", len(tf.config.list_physical_devices("GPU")))
+
 
 async def download_image(image_url: str) -> bytes:
     """Download an image from a URL."""
@@ -106,7 +107,9 @@ async def classify_image(file: UploadFile = File(None)):
 
     except PipelineException as e:
         logging.error("Error processing image: %s", str(e))
-        raise HTTPException(status_code=500, detail=f"Error processing image: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error processing image: {str(e)}"
+        ) from e
 
 
 @app.post("/v1/detect/urls", response_model=list[UrlImageDetectionResponse])
@@ -160,7 +163,7 @@ async def classify_images(request: ImageUrlsRequest):
             raise HTTPException(
                 status_code=500,
                 detail=f"Error processing image from {image_url}: {str(e)}",
-            )
+            ) from e
 
     return JSONResponse(status_code=200, content=response_data)
 
